@@ -2,7 +2,10 @@
 
 ## Summary
 
-`UIAccessibility.convertToScreenCoordinates(_:in:)` mutates the input `UIBezierPath` in-place on iOS 18 and later, instead of returning a new path with converted coordinates. This is a regression from iOS 17 behavior.
+`UIAccessibility.convertToScreenCoordinates(_:in:)` mutates the input `UIBezierPath` in-place on iOS 18 and later. This violates the documented API contract which states it **"returns a new path object with the results"**.
+
+> "Converts the specified path object to screen coordinates and **returns a new path object** with the results."
+> — [Apple Developer Documentation](https://developer.apple.com/documentation/uikit/uiaccessibility/1615139-converttoscreencoordinates)
 
 ## Environment
 
@@ -48,7 +51,9 @@ xcodebuild test -project iOS18AccessibilityBugRepro.xcodeproj \
 
 ## Expected Results
 
-Each read of `accessibilityPath` returns the same screen coordinates. The input path is not modified.
+Per the [documented behavior](https://developer.apple.com/documentation/uikit/uiaccessibility/1615139-converttoscreencoordinates), the method should return a new path object. The input path should not be modified.
+
+Each read of `accessibilityPath` returns the same screen coordinates:
 
 ```
 Read 1: origin=(100.0, 200.0)
@@ -60,7 +65,7 @@ Read 5: origin=(100.0, 200.0)
 
 ## Actual Results
 
-On iOS 18+, coordinates accumulate with each read because the input path is mutated:
+On iOS 18+, the input path is mutated in-place. Coordinates accumulate with each call:
 
 ```
 Read 1: origin=(100.0, 200.0)   ← correct
