@@ -2,100 +2,65 @@
 
 ## Summary
 
-`UIAccessibility.convertToScreenCoordinates(_:in:)` mutates the input `UIBezierPath` in-place on iOS 18 and later. This violates the documented API contract which states it **"returns a new path object with the results"**.
+`UIAccessibility.convertToScreenCoordinates(_:in:)` mutates the input `UIBezierPath` in-place on iOS 18 and later when called via an `accessibilityPath` getter while the view is in a key/visible window. This violates the documented API contract.
 
 > "Converts the specified path object to screen coordinates and **returns a new path object** with the results."
 > — [Apple Developer Documentation](https://developer.apple.com/documentation/uikit/uiaccessibility/1615139-converttoscreencoordinates)
 
-## Environment
+## Bug Conditions
 
-- iOS 18.0+ (tested on 18.5 and 26.1)
-- Does NOT occur on iOS 17.5 and earlier
-- Xcode 16.4 / Xcode 26.1
+The bug requires ALL of these conditions:
+1. **Path type**: Path built with explicit elements (`addLine`, `addCurve`, `roundedRect`, etc.)
+2. **Window hierarchy**: View must be in a **key and visible** window
+3. **Access method**: Called via `accessibilityPath` getter (direct API calls work correctly!)
+4. **Path reuse**: Same path object used across multiple reads
 
-## Root Cause
+## Path Types
 
-The bug affects paths that contain **explicit path elements** internally. Paths using optimized internal representations (from convenience initializers) are unaffected.
-
-### Works Correctly (No Bug)
+### Works Correctly
 | Path Type | Notes |
 |-----------|-------|
-| `UIBezierPath(rect:)` | Convenience initializer |
-| `UIBezierPath(ovalIn:)` | Convenience initializer |
-| `UIBezierPath(arcCenter:...)` | Convenience initializer |
+| `UIBezierPath(rect:)` | Optimized internal representation |
+| `UIBezierPath(ovalIn:)` | Optimized internal representation |
+| `UIBezierPath(arcCenter:...)` | Optimized internal representation |
 | `CGPath(rect:)` → `UIBezierPath(cgPath:)` | CGPath rect also works |
 | Empty path | No elements to mutate |
-| View at origin (0,0) | Bug exists but 0+0=0 so not observable |
 
-### Has Bug (Coordinates Accumulate)
+### Has Bug
 | Path Type | Notes |
 |-----------|-------|
 | `UIBezierPath(roundedRect:cornerRadius:)` | Uses curves internally |
-| `path.move(to:)` | Explicit element |
-| `path.addLine(to:)` | Explicit element |
-| `path.addQuadCurve(to:controlPoint:)` | Explicit element |
-| `path.addCurve(to:controlPoint1:controlPoint2:)` | Explicit element |
-| `path.close()` | Explicit element |
-| `CGMutablePath` with `addLine` | CGPath explicit elements also affected |
+| `path.move(to:)` / `path.addLine(to:)` | Explicit elements |
+| `path.addQuadCurve(...)` / `path.addCurve(...)` | Explicit elements |
+| Any path with `.reversing()` applied | Converts to explicit elements |
+| `rect.append(linePath)` or `rect.addLine(...)` | Adding explicit element breaks it |
 
-### Operations That Break Working Paths
-| Operation | Result |
-|-----------|--------|
-| `rect.addLine(to:)` | ❌ Adding line to rect breaks it |
-| `oval.addLine(to:)` | ❌ Adding line to oval breaks it |
-| `rect.append(linePath)` | ❌ Appending line path breaks it |
-| `linePath.append(rect)` | ❌ Line path stays broken even with rect appended |
-| `rect.reversing()` | ❌ Reversing converts to explicit elements, breaks it |
-| `linePath.copy()` | ❌ Copying preserves the bug |
-| `linePath.apply(transform)` | ❌ Transform doesn't fix it |
+## Window Hierarchy Requirements
 
-## Steps to Reproduce
+| Scenario | Bug Triggered? |
+|----------|---------------|
+| View not in any hierarchy | ✅ No bug |
+| View in detached hierarchy (no window) | ✅ No bug |
+| View in window that's not key/visible | ✅ No bug |
+| View in key/visible window | ❌ **BUG** |
+| Direct `convertToScreenCoordinates` call (not via getter) | ✅ No bug |
 
-1. Create a `UIView` subclass that stores a `UIBezierPath` in local coordinates
-2. Override `accessibilityPath` to convert using `UIAccessibility.convertToScreenCoordinates`
-3. Use a path with explicit elements (e.g., `addLine` or `roundedRect`)
-4. Read `accessibilityPath` multiple times
+## What Doesn't Matter
 
-```swift
-class CustomView: UIView {
-    var relativePath: UIBezierPath?
+These do NOT prevent the bug:
+- `isAccessibilityElement` setting
+- `accessibilityElementsHidden`
+- View type (UIView, UILabel, UIButton)
+- View transforms (rotation, scale, translation)
+- ScrollView containment
+- Hidden views / zero alpha
+- Clipped views
+- Deep nesting
+- Layout timing
 
-    override var accessibilityPath: UIBezierPath? {
-        get {
-            guard let path = relativePath else { return nil }
-            return UIAccessibility.convertToScreenCoordinates(path, in: self)
-        }
-        set { super.accessibilityPath = newValue }
-    }
-}
+## Workarounds
 
-// This triggers the bug:
-view.relativePath = UIBezierPath(roundedRect: rect, cornerRadius: 10)
-let _ = view.accessibilityPath  // Read 1: correct
-let _ = view.accessibilityPath  // Read 2: coordinates doubled!
-let _ = view.accessibilityPath  // Read 3: coordinates tripled!
-```
-
-## Expected vs Actual Results
-
-**Expected** (iOS 17 behavior):
-```
-Read 1: origin=(100.0, 200.0)
-Read 2: origin=(100.0, 200.0)
-Read 3: origin=(100.0, 200.0)
-```
-
-**Actual** (iOS 18+ with affected path types):
-```
-Read 1: origin=(100.0, 200.0)   ← correct
-Read 2: origin=(200.0, 400.0)   ← doubled!
-Read 3: origin=(300.0, 600.0)   ← tripled!
-```
-
-## Workaround
-
-Copy the path before calling `convertToScreenCoordinates`:
-
+### Option 1: Copy the path (recommended)
 ```swift
 override var accessibilityPath: UIBezierPath? {
     get {
@@ -105,6 +70,27 @@ override var accessibilityPath: UIBezierPath? {
     }
     set { super.accessibilityPath = newValue }
 }
+```
+
+### Option 2: Create fresh path each time
+```swift
+override var accessibilityPath: UIBezierPath? {
+    get {
+        // Create new path each time instead of storing
+        let path = UIBezierPath()
+        path.move(to: CGPoint(x: 0, y: 0))
+        path.addLine(to: CGPoint(x: bounds.width, y: bounds.height))
+        return UIAccessibility.convertToScreenCoordinates(path, in: self)
+    }
+    set { super.accessibilityPath = newValue }
+}
+```
+
+### Option 3: Use rect/oval initializers if possible
+```swift
+// This works without copying:
+let path = UIBezierPath(rect: bounds)  // ✅ No bug
+let path = UIBezierPath(ovalIn: bounds)  // ✅ No bug
 ```
 
 ## Running the Tests
@@ -120,3 +106,11 @@ xcodebuild test -project iOS18AccessibilityBugRepro.xcodeproj \
   -scheme iOS18AccessibilityBugRepro \
   -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=17.5'
 ```
+
+## Regression Status
+
+| iOS Version | Status |
+|-------------|--------|
+| iOS 17.5 | ✅ All tests pass |
+| iOS 18.5 | ❌ Bug present |
+| iOS 26.1 | ❌ Bug still present |
