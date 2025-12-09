@@ -53,11 +53,6 @@
 			path = iOS18AccessibilityBugReproTests;
 			sourceTree = "<group>";
 		};
-		ACB960022EE8800A004FD0CE /* iOS18AccessibilityBugReproUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = iOS18AccessibilityBugReproUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,7 +85,6 @@
 			children = (
 				ACB95FE12EE88009004FD0CE /* iOS18AccessibilityBugRepro */,
 				ACB95FF82EE8800A004FD0CE /* iOS18AccessibilityBugReproTests */,
-				ACB960022EE8800A004FD0CE /* iOS18AccessibilityBugReproUITests */,
 				ACB95FE02EE88009004FD0CE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -165,9 +159,6 @@
 			);
 			dependencies = (
 				ACB960012EE8800A004FD0CE /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				ACB960022EE8800A004FD0CE /* iOS18AccessibilityBugReproUITests */,
 			);
 			name = iOS18AccessibilityBugReproUITests;
 			packageProductDependencies = (
