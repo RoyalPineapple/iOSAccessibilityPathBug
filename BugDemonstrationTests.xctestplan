@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "C2172A9C-0B78-431B-9179-109F7A7E9157",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:iOSAccessibilityPathBug.xcodeproj",
+        "identifier" : "ACB95FF42EE8800A004FD0CE",
+        "name" : "BugDemonstrationTests"
+      }
+    }
+  ],
+  "version" : 1
+}

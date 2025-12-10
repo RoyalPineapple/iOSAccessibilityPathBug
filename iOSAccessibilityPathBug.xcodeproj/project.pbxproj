@@ -12,50 +12,75 @@
 			containerPortal = ACB95FD72EE88009004FD0CE /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = ACB95FDE2EE88009004FD0CE;
-			remoteInfo = iOS18AccessibilityBugRepro;
+			remoteInfo = iOSAccessibilityPathBug;
 		};
-		ACB960002EE8800A004FD0CE /* PBXContainerItemProxy */ = {
+		ACB9616A2EE9A016004FD0CE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ACB95FD72EE88009004FD0CE /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = ACB95FDE2EE88009004FD0CE;
-			remoteInfo = iOS18AccessibilityBugRepro;
+			remoteInfo = iOSAccessibilityPathBug;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		ACB95FDF2EE88009004FD0CE /* iOS18AccessibilityBugRepro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOS18AccessibilityBugRepro.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		ACB95FF52EE8800A004FD0CE /* iOS18AccessibilityBugReproTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOS18AccessibilityBugReproTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		ACB95FFF2EE8800A004FD0CE /* iOS18AccessibilityBugReproUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOS18AccessibilityBugReproUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		ACB95FDF2EE88009004FD0CE /* AccessibilityBugTestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AccessibilityBugTestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ACB95FF52EE8800A004FD0CE /* BugDemonstrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BugDemonstrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		ACB961712EE9A016004FD0CE /* BugExplorationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BugExplorationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		ACB961802EE9A165004FD0CE /* BugDemonstrationTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = BugDemonstrationTests.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		ACB960072EE8800A004FD0CE /* Exceptions for "iOS18AccessibilityBugRepro" folder in "iOS18AccessibilityBugRepro" target */ = {
+		ACB960072EE8800A004FD0CE /* Exceptions for "iOSAccessibilityPathBug" folder in "AccessibilityBugTestHost" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = ACB95FDE2EE88009004FD0CE /* iOS18AccessibilityBugRepro */;
+			target = ACB95FDE2EE88009004FD0CE /* AccessibilityBugTestHost */;
+		};
+		ACB961722EE9A016004FD0CE /* Exceptions for "iOSAccessibilityPathBugTests" folder in "BugExplorationTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				PathMutationDemonstration.swift,
+			);
+			target = ACB961682EE9A016004FD0CE /* BugExplorationTests */;
+		};
+		ACB9617F2EE9A02F004FD0CE /* Exceptions for "iOSAccessibilityPathBugTests" folder in "BugDemonstrationTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Exploration/AccessibilityPathMutationTests.swift,
+				Exploration/AccessibilitySystemTests.swift,
+				Exploration/BugModelTests.swift,
+				Exploration/CGPathMutationTests.swift,
+				Exploration/DebugMutationTests.swift,
+				Exploration/InstrumentedPathTests.swift,
+				Exploration/MoreEdgeCaseTests.swift,
+				Exploration/MutationMechanismTests.swift,
+				Exploration/MutationPredictionTests.swift,
+				Exploration/PointerTrackingTests.swift,
+				Exploration/TransformOutputTests.swift,
+				Exploration/WindowHierarchyTests.swift,
+			);
+			target = ACB95FF42EE8800A004FD0CE /* BugDemonstrationTests */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		ACB95FE12EE88009004FD0CE /* iOS18AccessibilityBugRepro */ = {
+		ACB95FE12EE88009004FD0CE /* iOSAccessibilityPathBug */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				ACB960072EE8800A004FD0CE /* Exceptions for "iOS18AccessibilityBugRepro" folder in "iOS18AccessibilityBugRepro" target */,
+				ACB960072EE8800A004FD0CE /* Exceptions for "iOSAccessibilityPathBug" folder in "AccessibilityBugTestHost" target */,
 			);
-			path = iOS18AccessibilityBugRepro;
+			path = iOSAccessibilityPathBug;
 			sourceTree = "<group>";
 		};
-		ACB95FF82EE8800A004FD0CE /* iOS18AccessibilityBugReproTests */ = {
+		ACB95FF82EE8800A004FD0CE /* iOSAccessibilityPathBugTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = iOS18AccessibilityBugReproTests;
-			sourceTree = "<group>";
-		};
-		ACB960022EE8800A004FD0CE /* iOS18AccessibilityBugReproUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = iOS18AccessibilityBugReproUITests;
+			exceptions = (
+				ACB9617F2EE9A02F004FD0CE /* Exceptions for "iOSAccessibilityPathBugTests" folder in "BugDemonstrationTests" target */,
+				ACB961722EE9A016004FD0CE /* Exceptions for "iOSAccessibilityPathBugTests" folder in "BugExplorationTests" target */,
+			);
+			path = iOSAccessibilityPathBugTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,7 +100,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		ACB95FFC2EE8800A004FD0CE /* Frameworks */ = {
+		ACB9616C2EE9A016004FD0CE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -88,9 +113,9 @@
 		ACB95FD62EE88009004FD0CE = {
 			isa = PBXGroup;
 			children = (
-				ACB95FE12EE88009004FD0CE /* iOS18AccessibilityBugRepro */,
-				ACB95FF82EE8800A004FD0CE /* iOS18AccessibilityBugReproTests */,
-				ACB960022EE8800A004FD0CE /* iOS18AccessibilityBugReproUITests */,
+				ACB961802EE9A165004FD0CE /* BugDemonstrationTests.xctestplan */,
+				ACB95FE12EE88009004FD0CE /* iOSAccessibilityPathBug */,
+				ACB95FF82EE8800A004FD0CE /* iOSAccessibilityPathBugTests */,
 				ACB95FE02EE88009004FD0CE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -98,9 +123,9 @@
 		ACB95FE02EE88009004FD0CE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				ACB95FDF2EE88009004FD0CE /* iOS18AccessibilityBugRepro.app */,
-				ACB95FF52EE8800A004FD0CE /* iOS18AccessibilityBugReproTests.xctest */,
-				ACB95FFF2EE8800A004FD0CE /* iOS18AccessibilityBugReproUITests.xctest */,
+				ACB95FDF2EE88009004FD0CE /* AccessibilityBugTestHost.app */,
+				ACB95FF52EE8800A004FD0CE /* BugDemonstrationTests.xctest */,
+				ACB961712EE9A016004FD0CE /* BugExplorationTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -108,9 +133,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		ACB95FDE2EE88009004FD0CE /* iOS18AccessibilityBugRepro */ = {
+		ACB95FDE2EE88009004FD0CE /* AccessibilityBugTestHost */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = ACB960082EE8800A004FD0CE /* Build configuration list for PBXNativeTarget "iOS18AccessibilityBugRepro" */;
+			buildConfigurationList = ACB960082EE8800A004FD0CE /* Build configuration list for PBXNativeTarget "AccessibilityBugTestHost" */;
 			buildPhases = (
 				ACB95FDB2EE88009004FD0CE /* Sources */,
 				ACB95FDC2EE88009004FD0CE /* Frameworks */,
@@ -121,18 +146,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				ACB95FE12EE88009004FD0CE /* iOS18AccessibilityBugRepro */,
+				ACB95FE12EE88009004FD0CE /* iOSAccessibilityPathBug */,
 			);
-			name = iOS18AccessibilityBugRepro;
+			name = AccessibilityBugTestHost;
 			packageProductDependencies = (
 			);
-			productName = iOS18AccessibilityBugRepro;
-			productReference = ACB95FDF2EE88009004FD0CE /* iOS18AccessibilityBugRepro.app */;
+			productName = iOSAccessibilityPathBug;
+			productReference = ACB95FDF2EE88009004FD0CE /* AccessibilityBugTestHost.app */;
 			productType = "com.apple.product-type.application";
 		};
-		ACB95FF42EE8800A004FD0CE /* iOS18AccessibilityBugReproTests */ = {
+		ACB95FF42EE8800A004FD0CE /* BugDemonstrationTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = ACB9600D2EE8800A004FD0CE /* Build configuration list for PBXNativeTarget "iOS18AccessibilityBugReproTests" */;
+			buildConfigurationList = ACB9600D2EE8800A004FD0CE /* Build configuration list for PBXNativeTarget "BugDemonstrationTests" */;
 			buildPhases = (
 				ACB95FF12EE8800A004FD0CE /* Sources */,
 				ACB95FF22EE8800A004FD0CE /* Frameworks */,
@@ -144,37 +169,37 @@
 				ACB95FF72EE8800A004FD0CE /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				ACB95FF82EE8800A004FD0CE /* iOS18AccessibilityBugReproTests */,
+				ACB95FF82EE8800A004FD0CE /* iOSAccessibilityPathBugTests */,
 			);
-			name = iOS18AccessibilityBugReproTests;
+			name = BugDemonstrationTests;
 			packageProductDependencies = (
 			);
-			productName = iOS18AccessibilityBugReproTests;
-			productReference = ACB95FF52EE8800A004FD0CE /* iOS18AccessibilityBugReproTests.xctest */;
+			productName = iOSAccessibilityPathBugTests;
+			productReference = ACB95FF52EE8800A004FD0CE /* BugDemonstrationTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		ACB95FFE2EE8800A004FD0CE /* iOS18AccessibilityBugReproUITests */ = {
+		ACB961682EE9A016004FD0CE /* BugExplorationTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = ACB960102EE8800A004FD0CE /* Build configuration list for PBXNativeTarget "iOS18AccessibilityBugReproUITests" */;
+			buildConfigurationList = ACB9616E2EE9A016004FD0CE /* Build configuration list for PBXNativeTarget "BugExplorationTests" */;
 			buildPhases = (
-				ACB95FFB2EE8800A004FD0CE /* Sources */,
-				ACB95FFC2EE8800A004FD0CE /* Frameworks */,
-				ACB95FFD2EE8800A004FD0CE /* Resources */,
+				ACB9616B2EE9A016004FD0CE /* Sources */,
+				ACB9616C2EE9A016004FD0CE /* Frameworks */,
+				ACB9616D2EE9A016004FD0CE /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				ACB960012EE8800A004FD0CE /* PBXTargetDependency */,
+				ACB961692EE9A016004FD0CE /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				ACB960022EE8800A004FD0CE /* iOS18AccessibilityBugReproUITests */,
+				ACB95FF82EE8800A004FD0CE /* iOSAccessibilityPathBugTests */,
 			);
-			name = iOS18AccessibilityBugReproUITests;
+			name = BugExplorationTests;
 			packageProductDependencies = (
 			);
-			productName = iOS18AccessibilityBugReproUITests;
-			productReference = ACB95FFF2EE8800A004FD0CE /* iOS18AccessibilityBugReproUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
+			productName = iOSAccessibilityPathBugTests;
+			productReference = ACB961712EE9A016004FD0CE /* BugExplorationTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -193,13 +218,9 @@
 						CreatedOnToolsVersion = 26.1.1;
 						TestTargetID = ACB95FDE2EE88009004FD0CE;
 					};
-					ACB95FFE2EE8800A004FD0CE = {
-						CreatedOnToolsVersion = 26.1.1;
-						TestTargetID = ACB95FDE2EE88009004FD0CE;
-					};
 				};
 			};
-			buildConfigurationList = ACB95FDA2EE88009004FD0CE /* Build configuration list for PBXProject "iOS18AccessibilityBugRepro" */;
+			buildConfigurationList = ACB95FDA2EE88009004FD0CE /* Build configuration list for PBXProject "iOSAccessibilityPathBug" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -213,9 +234,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				ACB95FDE2EE88009004FD0CE /* iOS18AccessibilityBugRepro */,
-				ACB95FF42EE8800A004FD0CE /* iOS18AccessibilityBugReproTests */,
-				ACB95FFE2EE8800A004FD0CE /* iOS18AccessibilityBugReproUITests */,
+				ACB95FDE2EE88009004FD0CE /* AccessibilityBugTestHost */,
+				ACB95FF42EE8800A004FD0CE /* BugDemonstrationTests */,
+				ACB961682EE9A016004FD0CE /* BugExplorationTests */,
 			);
 		};
 /* End PBXProject section */
@@ -235,7 +256,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		ACB95FFD2EE8800A004FD0CE /* Resources */ = {
+		ACB9616D2EE9A016004FD0CE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -259,7 +280,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		ACB95FFB2EE8800A004FD0CE /* Sources */ = {
+		ACB9616B2EE9A016004FD0CE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -271,13 +292,13 @@
 /* Begin PBXTargetDependency section */
 		ACB95FF72EE8800A004FD0CE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = ACB95FDE2EE88009004FD0CE /* iOS18AccessibilityBugRepro */;
+			target = ACB95FDE2EE88009004FD0CE /* AccessibilityBugTestHost */;
 			targetProxy = ACB95FF62EE8800A004FD0CE /* PBXContainerItemProxy */;
 		};
-		ACB960012EE8800A004FD0CE /* PBXTargetDependency */ = {
+		ACB961692EE9A016004FD0CE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = ACB95FDE2EE88009004FD0CE /* iOS18AccessibilityBugRepro */;
-			targetProxy = ACB960002EE8800A004FD0CE /* PBXContainerItemProxy */;
+			target = ACB95FDE2EE88009004FD0CE /* AccessibilityBugTestHost */;
+			targetProxy = ACB9616A2EE9A016004FD0CE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -290,7 +311,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = iOS18AccessibilityBugRepro/Info.plist;
+				INFOPLIST_FILE = iOSAccessibilityPathBug/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -301,7 +322,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sqareup.iOS18AccessibilityBugRepro;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sqareup.iOSAccessibilityPathBug;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -321,7 +342,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = iOS18AccessibilityBugRepro/Info.plist;
+				INFOPLIST_FILE = iOSAccessibilityPathBug/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -332,7 +353,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sqareup.iOS18AccessibilityBugRepro;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sqareup.iOSAccessibilityPathBug;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -472,7 +493,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sqareup.iOS18AccessibilityBugReproTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sqareup.iOSAccessibilityPathBugTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -480,7 +501,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOS18AccessibilityBugRepro.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/iOS18AccessibilityBugRepro";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AccessibilityBugTestHost.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AccessibilityBugTestHost";
 			};
 			name = Debug;
 		};
@@ -493,7 +514,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sqareup.iOS18AccessibilityBugReproTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sqareup.iOSAccessibilityPathBugTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -501,18 +522,20 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOS18AccessibilityBugRepro.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/iOS18AccessibilityBugRepro";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AccessibilityBugTestHost.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AccessibilityBugTestHost";
 			};
 			name = Release;
 		};
-		ACB960112EE8800A004FD0CE /* Debug */ = {
+		ACB9616F2EE9A016004FD0CE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sqareup.iOS18AccessibilityBugReproUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sqareup.iOSAccessibilityPathBugTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -520,18 +543,20 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = iOS18AccessibilityBugRepro;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AccessibilityBugTestHost.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AccessibilityBugTestHost";
 			};
 			name = Debug;
 		};
-		ACB960122EE8800A004FD0CE /* Release */ = {
+		ACB961702EE9A016004FD0CE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sqareup.iOS18AccessibilityBugReproUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sqareup.iOSAccessibilityPathBugTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -539,14 +564,14 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = iOS18AccessibilityBugRepro;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AccessibilityBugTestHost.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AccessibilityBugTestHost";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		ACB95FDA2EE88009004FD0CE /* Build configuration list for PBXProject "iOS18AccessibilityBugRepro" */ = {
+		ACB95FDA2EE88009004FD0CE /* Build configuration list for PBXProject "iOSAccessibilityPathBug" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				ACB9600B2EE8800A004FD0CE /* Debug */,
@@ -555,7 +580,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		ACB960082EE8800A004FD0CE /* Build configuration list for PBXNativeTarget "iOS18AccessibilityBugRepro" */ = {
+		ACB960082EE8800A004FD0CE /* Build configuration list for PBXNativeTarget "AccessibilityBugTestHost" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				ACB960092EE8800A004FD0CE /* Debug */,
@@ -564,7 +589,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		ACB9600D2EE8800A004FD0CE /* Build configuration list for PBXNativeTarget "iOS18AccessibilityBugReproTests" */ = {
+		ACB9600D2EE8800A004FD0CE /* Build configuration list for PBXNativeTarget "BugDemonstrationTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				ACB9600E2EE8800A004FD0CE /* Debug */,
@@ -573,11 +598,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		ACB960102EE8800A004FD0CE /* Build configuration list for PBXNativeTarget "iOS18AccessibilityBugReproUITests" */ = {
+		ACB9616E2EE9A016004FD0CE /* Build configuration list for PBXNativeTarget "BugExplorationTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				ACB960112EE8800A004FD0CE /* Debug */,
-				ACB960122EE8800A004FD0CE /* Release */,
+				ACB9616F2EE9A016004FD0CE /* Debug */,
+				ACB961702EE9A016004FD0CE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  iOS18AccessibilityBugRepro
+//  iOSAccessibilityPathBug
 //
 //  Created by aodawa on 09/12/2025.
 //
