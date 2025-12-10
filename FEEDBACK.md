@@ -6,11 +6,11 @@
 
 ## Summary
 
-`UIAccessibility.convertToScreenCoordinates(_:in:)` uses a global accumulation counter that causes returned path coordinates to drift on repeated calls. This regression was introduced in iOS 18.0 and causes VoiceOver focus outlines to drift away from their intended positions. The function correctly creates new output paths as documented, but calculates their coordinates using corrupted internal state that accumulates N× the screen offset without resetting between calls.
+`UIAccessibility.convertToScreenCoordinates(_:in:)` exhibits coordinate drift when called repeatedly with the same CGPath. This regression was introduced in iOS 18.0 and causes VoiceOver focus outlines to drift away from their intended positions. The function correctly creates new output paths as documented, but calculates their coordinates with accumulation errors: N× the screen offset, where N is the number of times that specific CGPath has been converted.
 
 ## Description
 
-The `UIAccessibility.convertToScreenCoordinates(_:in:)` API is documented to "return a new path object" with coordinates converted to screen space. Starting in iOS 18.0, the function uses a global accumulation counter that increments on every call, causing returned coordinates to be incorrect: the 1st call returns correct coordinates, the 2nd call returns 2× the screen offset, the 3rd call returns 3× the screen offset, and so on. The input path parameter remains unchanged - the bug is entirely in how output coordinates are calculated.
+The `UIAccessibility.convertToScreenCoordinates(_:in:)` API is documented to "return a new path object" with coordinates converted to screen space. Starting in iOS 18.0, when called repeatedly with the same CGPath object, returned coordinates accumulate the screen offset multiple times: the 1st call returns correct coordinates, the 2nd call returns 2× the screen offset, the 3rd call returns 3× the screen offset, and so on. The input path parameter remains unchanged - the bug affects only the returned path's coordinates.
 
 This breaks the standard implementation pattern for `accessibilityPath` where a single relative path is converted on each access. When a view's `accessibilityPath` getter is accessed multiple times (as happens during normal VoiceOver usage), the returned coordinates drift further from the correct position with each access. This manifests visually as VoiceOver focus outlines that are incorrectly positioned or completely off-screen.
 
@@ -64,15 +64,15 @@ print(third.bounds.origin)           // (300, 600) - wrong!
 
 - Each call to `convertToScreenCoordinates(_:in:)` returns a new path (as documented) BUT with incorrect coordinates
 - The input path remains unchanged (correct) but returned paths have cumulative errors: 1st=(100,200) ✓, 2nd=(200,400) ✗, 3rd=(300,600) ✗
-- Coordinates follow pattern: `returned_coordinates = original + (N × screenOffset)` where N is a global call counter
+- Coordinates follow pattern: `returned_coordinates = original + (N × screenOffset)` where N is the number of times that specific CGPath has been converted
 - Multiple accesses to `accessibilityPath` return increasingly incorrect coordinates
 - VoiceOver focus outlines drift away from their views or appear off-screen
 
-**Root cause:** Global accumulation counter that:
-- Increments on every call to the function (across ALL views/paths)
-- Is tied to path object identity (resets when path object changes)
-- Does NOT reset when view moves or when creating fresh view instances
-- Applies N× the screen offset to output coordinates
+**Observable behavior:**
+- Coordinate drift is per-CGPath (each unique CGPath accumulates independently)
+- Drift resets (returns to correct values) when new path object is created or CGPath is modified
+- Drift does NOT reset (continues) when view moves or when creating fresh view instances
+- Rect/oval path types always return correct coordinates (no drift observed)
 
 ## Configuration
 
@@ -101,7 +101,7 @@ print(third.bounds.origin)           // (300, 600) - wrong!
 
 ## Workaround
 
-Copy the path before conversion to create a new path object, which resets the internal counter:
+Copy the path before conversion to create a new path object:
 
 ```swift
 override var accessibilityPath: UIBezierPath? {
@@ -113,7 +113,7 @@ override var accessibilityPath: UIBezierPath? {
 }
 ```
 
-**Why this works:** The global accumulation counter is tied to path object identity. Creating a new path object via `copy()` resets the counter to 1, ensuring each call with the copied path produces correct coordinates (since it's only called once per copy).
+**Why this works:** Tests confirm that when a new path object is created (via `copy()` or modification), the next conversion returns correct coordinates instead of accumulated values. Since each `accessibilityPath` call creates a fresh copy, each conversion is the first call for that CGPath object and returns correct coordinates.
 
 ## Sample Project
 
@@ -138,10 +138,11 @@ This regression has significant impact on apps using custom accessibility paths,
 
 **Key technical findings from investigation:**
 - The input path is NEVER mutated (confirmed via object identity, bounds checks, and CGPath pointer tracking)
-- Each call returns a NEW CGPath object (confirmed via distinct pointer addresses)
-- The counter is GLOBAL across all views and paths (confirmed via interleaved multi-view tests)
-- Creating fresh path/view instances each time does NOT prevent accumulation (counter is global)
-- The counter resets when path object identity changes (confirmed: setting new path resets counter)
-- The counter does NOT reset when view moves (only path object change triggers reset)
+- Each call returns a NEW output path object (confirmed via distinct CGPath pointer addresses)
+- Accumulation is per-CGPath, not per-view (confirmed via interleaved multi-view tests with different CGPaths)
+- Creating fresh view instances does NOT prevent accumulation (same CGPath continues accumulating)
+- Coordinate drift resets when new path object is created or CGPath is modified
+- Coordinate drift does NOT reset when view moves or hierarchy changes
+- Rect/oval path types always return correct coordinates with no drift
 
-These findings conclusively demonstrate the bug is in the function's internal coordinate calculation logic, not in path mutation as initially suspected.
+These findings confirm the bug affects only the returned path's coordinate calculation and varies based on CGPath object identity and modification history.

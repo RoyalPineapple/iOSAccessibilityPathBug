@@ -2,7 +2,7 @@
 
 ## Summary
 
-In iOS 18+, `UIAccessibility.convertToScreenCoordinates(_:in:)` uses a global accumulation counter that causes returned path coordinates to drift on repeated calls. The function creates new output paths (as documented) but calculates coordinates using internal state that accumulates N× the screen offset without resetting between calls.
+In iOS 18+, `UIAccessibility.convertToScreenCoordinates(_:in:)` exhibits coordinate drift when called repeatedly with the same CGPath. The function creates new output paths (as documented) but calculates coordinates that accumulate N× the screen offset, where N is the number of times that specific CGPath has been converted.
 
 **Observed in:** iOS 18.0 through iOS 26.1
 **Last working version:** iOS 17.5
@@ -86,36 +86,50 @@ Screenshots generated with [AccessibilitySnapshot](https://github.com/cashapp/Ac
 
 ## Technical Details
 
-**Root cause:** The function uses a **global accumulation counter** that increments on every call and applies N× the screen offset to the returned path coordinates. The input path is never modified - the bug is entirely in how the function calculates the output path's coordinates.
+**Observed behavior:** When called repeatedly with the same CGPath, `convertToScreenCoordinates()` returns new paths with coordinates that accumulate the screen offset multiple times. The input path is never modified - the bug affects only the returned path's coordinates.
 
 **Accumulation pattern:**
 ```
 returned_coordinates = original + (N × screenOffset)
 
 where:
-  N = global call counter (1, 2, 3, ...) shared across ALL views/paths
+  N = number of times this specific CGPath has been converted (1, 2, 3, ...)
   screenOffset = view.convert(CGPoint.zero, to: nil)
 ```
 
-**Key findings from investigation tests:**
-- ✓ Input path remains unchanged (same object, bounds, and CGPath pointer)
-- ✓ Each call returns a NEW path object (different CGPath pointers)
-- ✓ Counter is GLOBAL, not per-view (multiple views share the same counter)
-- ✓ Creating fresh path/view objects each time doesn't help (counter still accumulates)
-- ✓ Counter resets when path object identity changes (why `path?.copy()` works)
-- ✓ Counter does NOT reset when view moves (only when path changes)
+**Confirmed through tests:**
+
+*Input path behavior:*
+- ✓ Input path object never changes (same reference, bounds, and CGPath pointer across all calls)
+- ✓ Each call returns a NEW output path object (confirmed via distinct CGPath pointer addresses)
+
+*Accumulation is per-CGPath:*
+- ✓ Each unique CGPath accumulates independently
+- ✓ Multiple views with different CGPaths show independent accumulation
+- ✓ Creating fresh view objects doesn't prevent accumulation (same CGPath continues accumulating)
+
+*Coordinate drift resets (returns to correct values) when:*
+- ✓ New path object assigned (`path?.copy()` or new `UIBezierPath(...)`)
+- ✓ CGPath is modified (`apply()`, `addLine()`, `close()`, etc.)
+
+*Coordinate drift does NOT reset (continues accumulating) when:*
+- ✓ Same path reference is reassigned without creating new object
+- ✓ View moves to new position or changes hierarchy
+
+*Path type behavior:*
+- ✓ `UIBezierPath(rect:)`, `UIBezierPath(ovalIn:)`, and `UIBezierPath(arcCenter:...)` always return correct coordinates (no accumulation)
+- ✓ After using rect/oval, switching to roundedRect starts accumulation fresh (no interaction between path types)
+- ✓ All other tested types accumulate: `roundedRect`, CGPath with explicit elements (lines, curves)
 
 **Trigger conditions** (all required):
-- Most path types (see Visual Comparison section for specifics)
+- Affected path type (roundedRect, CGPath with explicit elements)
 - View is in a key, visible window
+- Multiple calls to function with same CGPath
 - Called from within `accessibilityPath` getter
-- Multiple calls to the function (counter accumulates)
-
-**Unaffected paths:** `UIBezierPath(rect:)`, `UIBezierPath(ovalIn:)`, and `UIBezierPath(arcCenter:...)` avoid the bug (likely use optimized internal representations). All other tested path types including `roundedRect` and `cgPath` constructions with explicit elements are affected.
 
 ## Workaround
 
-Copy the path before conversion to create a new path object, which resets the internal counter:
+Copy the path before conversion to create a new path object:
 
 ```swift
 override var accessibilityPath: UIBezierPath? {
@@ -127,7 +141,7 @@ override var accessibilityPath: UIBezierPath? {
 }
 ```
 
-**Why this works:** The global counter is tied to path object identity. Creating a new path object via `copy()` resets the counter to start from 1, ensuring the first (and only) call with that path object produces correct coordinates.
+**Why this works:** Tests confirm that when a new path object is created (via `copy()` or modification), the next conversion returns correct coordinates instead of accumulated values. Since each `accessibilityPath` call creates a fresh copy, each conversion is the first call for that CGPath object and returns correct coordinates.
 
 ## Running the Tests
 
