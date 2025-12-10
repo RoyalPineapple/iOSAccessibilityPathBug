@@ -27,7 +27,6 @@
 		ACB95FDF2EE88009004FD0CE /* AccessibilityBugTestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AccessibilityBugTestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ACB95FF52EE8800A004FD0CE /* BugDemonstrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BugDemonstrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ACB961712EE9A016004FD0CE /* BugExplorationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BugExplorationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		ACB961802EE9A165004FD0CE /* BugDemonstrationTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = BugDemonstrationTests.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -50,6 +49,7 @@
 			membershipExceptions = (
 				Exploration/AccessibilityPathMutationTests.swift,
 				Exploration/AccessibilitySystemTests.swift,
+				Exploration/BugMechanismInvestigation.swift,
 				Exploration/BugModelTests.swift,
 				Exploration/CGPathMutationTests.swift,
 				Exploration/DebugMutationTests.swift,
@@ -113,7 +113,6 @@
 		ACB95FD62EE88009004FD0CE = {
 			isa = PBXGroup;
 			children = (
-				ACB961802EE9A165004FD0CE /* BugDemonstrationTests.xctestplan */,
 				ACB95FE12EE88009004FD0CE /* iOSAccessibilityPathBug */,
 				ACB95FF82EE8800A004FD0CE /* iOSAccessibilityPathBugTests */,
 				ACB95FE02EE88009004FD0CE /* Products */,
