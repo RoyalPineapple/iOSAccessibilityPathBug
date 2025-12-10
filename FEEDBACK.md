@@ -1,7 +1,7 @@
 # Apple Feedback: UIAccessibility.convertToScreenCoordinates Mutates Input Path
 
 **Feedback Type:** Bug Report
-**Area:** Accessibility
+**Area:** UIAccessibility API
 **Reproducible:** Always
 
 ## Summary
@@ -102,11 +102,10 @@ override var accessibilityPath: UIBezierPath? {
 
 ## Sample Project
 
-A complete sample project demonstrating this issue is available at:
+A complete sample project demonstrating this issue is attached or available at:
 https://github.com/RoyalPineapple/iOSAccessibilityPathBug
 
 The project includes:
-- Minimal reproduction in the app with visual demonstration via VoiceOver
 - Unit tests documenting the bug across different path types
 - Before/after screenshots showing the visual impact
 - Tests verifying the workaround
