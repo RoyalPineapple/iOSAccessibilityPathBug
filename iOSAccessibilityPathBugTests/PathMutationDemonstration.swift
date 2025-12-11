@@ -164,7 +164,7 @@ final class PathMutationDemonstration: XCTestCase {
     // MARK: - Workaround Verification
 
     func test_workaround_copyPath_coordinatesStable() {
-        // Workaround: copying the path prevents mutation and drift
+        // Workaround: copying the path prevents coordinate drift
         let view = FixedPathView(frame: CGRect(x: 100, y: 200, width: 60, height: 40))
         let path = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 60, height: 40), cornerRadius: 10)
         view.relativePath = path

@@ -1,4 +1,4 @@
-# UIAccessibility.convertToScreenCoordinates Path Mutation Bug
+# UIAccessibility.convertToScreenCoordinates Coordinate Drift Bug
 
 ## Summary
 
@@ -20,7 +20,7 @@ override var accessibilityPath: UIBezierPath? {
 }
 ```
 
-Starting in iOS 18, this API uses corrupted internal state when calculating the returned path's coordinates, causing accumulation errors on repeated calls.
+Starting in iOS 18, when this API is called repeatedly with the same CGPath, the returned coordinates accumulate incorrectly.
 
 ## Minimal Reproduction
 
@@ -55,7 +55,7 @@ print(third.bounds.origin)  // (300, 600) - 3× screen offset
 ```
 
 **Expected:** Returns a new path with screen coordinates (100, 200) on each call; input path unchanged.
-**Actual:** Returns new paths with cumulative coordinate errors: 1st call correct, 2nd call has 2× offset, 3rd call has 3× offset. Input path remains unchanged (the bug is in output generation, not input mutation).
+**Actual:** Returns new paths with cumulative coordinate errors: 1st call correct, 2nd call has 2× offset, 3rd call has 3× offset. Input path remains unchanged - the bug affects only the returned coordinates.
 
 ### Visual Comparison
 
@@ -81,7 +81,7 @@ Screenshots generated with [AccessibilitySnapshot](https://github.com/cashapp/Ac
 | iOS Version | Status |
 |-------------|--------|
 | iOS 17.5 | Works as documented |
-| iOS 18.0+ | Path mutation occurs |
+| iOS 18.0+ | Coordinate drift bug present |
 | iOS 26.1 | Still present |
 
 ## Bug Behavior
