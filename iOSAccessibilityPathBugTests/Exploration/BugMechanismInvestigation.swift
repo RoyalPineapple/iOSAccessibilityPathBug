@@ -466,3 +466,161 @@ private class BuggyPathView: UIView {
         set { fatalError("use relativePath instead") }
     }
 }
+
+    // MARK: - Alternative Workarounds (No Copy)
+
+    func test_workaround_identityTransform() {
+        // Can we reset by applying identity transform?
+        let view = BuggyPathView(frame: CGRect(x: 100, y: 200, width: 60, height: 40))
+        let path = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 60, height: 40), cornerRadius: 10)
+        view.relativePath = path
+        testView.addSubview(view)
+        window.layoutIfNeeded()
+
+        let expectedX: CGFloat = 100.0
+
+        // Baseline: establish accumulation
+        let r1 = view.accessibilityPath!.bounds.origin.x
+        let r2 = view.accessibilityPath!.bounds.origin.x
+        XCTFail("""
+        === BASELINE ACCUMULATION ===
+        1st: \(r1) (Expected: 100)
+        2nd: \(r2) (Expected: 200)
+        """)
+
+        // Apply identity transform to "reset"
+        path.apply(.identity)
+        let afterIdentity1 = view.accessibilityPath!.bounds.origin.x
+        let afterIdentity2 = view.accessibilityPath!.bounds.origin.x
+        XCTFail("""
+        === AFTER APPLYING IDENTITY TRANSFORM ===
+        1st after identity: \(afterIdentity1) (Expected: 100 if reset)
+        2nd after identity: \(afterIdentity2) (Expected: 100 if truly reset, 200 if accumulating)
+        Original path bounds: \(path.bounds)
+        Workaround viable? \(abs(afterIdentity1 - expectedX) < 0.1 && abs(afterIdentity2 - expectedX) < 0.1)
+        """)
+    }
+
+    func test_workaround_cachedResult() {
+        // Can we cache the first conversion and reuse it?
+        let view = CachedPathView(frame: CGRect(x: 100, y: 200, width: 60, height: 40))
+        let path = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 60, height: 40), cornerRadius: 10)
+        view.relativePath = path
+        testView.addSubview(view)
+        window.layoutIfNeeded()
+
+        let expectedX: CGFloat = 100.0
+
+        let r1 = view.accessibilityPath!.bounds.origin.x
+        let r2 = view.accessibilityPath!.bounds.origin.x
+        let r3 = view.accessibilityPath!.bounds.origin.x
+        
+        XCTFail("""
+        === CACHED RESULT WORKAROUND ===
+        1st: \(r1) (Expected: 100)
+        2nd: \(r2) (Expected: 100)
+        3rd: \(r3) (Expected: 100)
+        All correct? \(abs(r1 - expectedX) < 0.1 && abs(r2 - expectedX) < 0.1 && abs(r3 - expectedX) < 0.1)
+        """)
+    }
+
+    func test_workaround_mutateAndRestore() {
+        // Can we mutate path, convert, then restore?
+        let view = BuggyPathView(frame: CGRect(x: 100, y: 200, width: 60, height: 40))
+        let path = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 60, height: 40), cornerRadius: 10)
+        view.relativePath = path
+        testView.addSubview(view)
+        window.layoutIfNeeded()
+
+        let expectedX: CGFloat = 100.0
+        let originalBounds = path.bounds
+
+        // Strategy: scale up, convert, scale down
+        let scaleUp = CGAffineTransform(scaleX: 2.0, y: 2.0)
+        let scaleDown = CGAffineTransform(scaleX: 0.5, y: 0.5)
+
+        // First conversion - normal
+        let r1 = view.accessibilityPath!.bounds.origin.x
+
+        // Second conversion - with mutation and restore
+        path.apply(scaleUp)
+        let converted2 = UIAccessibility.convertToScreenCoordinates(path, in: view)
+        path.apply(scaleDown)
+        let r2 = converted2.bounds.origin.x
+        
+        // Third conversion - normal again
+        let r3 = view.accessibilityPath!.bounds.origin.x
+        
+        XCTFail("""
+        === MUTATE AND RESTORE WORKAROUND ===
+        1st (normal): \(r1) (Expected: 100)
+        2nd (after mutation): \(r2) (Expected: 200)
+        3rd (after restore): \(r3) (Expected: 100 if reset worked)
+        Path bounds after restore: \(path.bounds)
+        Original bounds: \(originalBounds)
+        Bounds match? \(abs(path.bounds.origin.x - originalBounds.origin.x) < 0.1)
+        """)
+    }
+
+    func test_workaround_applyAndUnapply() {
+        // Simpler: apply tiny translation, convert, unapply
+        let view = BuggyPathView(frame: CGRect(x: 100, y: 200, width: 60, height: 40))
+        let path = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 60, height: 40), cornerRadius: 10)
+        view.relativePath = path
+        testView.addSubview(view)
+        window.layoutIfNeeded()
+
+        let expectedX: CGFloat = 100.0
+        let originalBounds = path.bounds
+
+        // Establish baseline
+        let r1 = view.accessibilityPath!.bounds.origin.x
+        let r2 = view.accessibilityPath!.bounds.origin.x
+        
+        // Apply tiny offset, convert, unapply
+        let tinyOffset = CGAffineTransform(translationX: 0.001, y: 0.001)
+        let reverseOffset = CGAffineTransform(translationX: -0.001, y: -0.001)
+        
+        path.apply(tinyOffset)
+        let r3 = view.accessibilityPath!.bounds.origin.x
+        path.apply(reverseOffset)
+        
+        let r4 = view.accessibilityPath!.bounds.origin.x
+        
+        XCTFail("""
+        === APPLY/UNAPPLY TINY OFFSET ===
+        1st: \(r1) (Expected: 100)
+        2nd: \(r2) (Expected: 200)
+        3rd (after tiny offset): \(r3) (Expected: 100 if reset)
+        4th (after unapply): \(r4) (Expected: 100 or 200)
+        Path bounds after cycle: \(path.bounds)
+        Original bounds: \(originalBounds)
+        Bounds restored? \(abs(path.bounds.origin.x - originalBounds.origin.x) < 0.01)
+        """)
+    }
+}
+
+// MARK: - Alternative Workaround Helpers
+
+/// View that caches the first converted path and returns it
+private class CachedPathView: UIView {
+    var relativePath: UIBezierPath?
+    private var cachedScreenPath: UIBezierPath?
+    private var cachedPathIdentity: ObjectIdentifier?
+
+    override var accessibilityPath: UIBezierPath? {
+        get {
+            guard let path = relativePath else { return nil }
+            let currentIdentity = ObjectIdentifier(path.cgPath)
+            
+            // If path changed, invalidate cache
+            if cachedPathIdentity != currentIdentity {
+                cachedPathIdentity = currentIdentity
+                cachedScreenPath = UIAccessibility.convertToScreenCoordinates(path, in: self)
+            }
+            
+            return cachedScreenPath
+        }
+        set { fatalError("use relativePath instead") }
+    }
+}
