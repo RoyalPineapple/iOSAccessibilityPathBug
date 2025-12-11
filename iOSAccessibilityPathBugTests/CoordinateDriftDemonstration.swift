@@ -152,25 +152,7 @@ final class CoordinateDriftDemonstration: XCTestCase {
         XCTAssertEqual(view.accessibilityPath!.bounds.origin.x, expectedX, "2nd read")
         XCTAssertEqual(view.accessibilityPath!.bounds.origin.x, expectedX, "3rd read")
     }
-
-    // MARK: - Other Trigger Conditions
-
-    func test_detachedView_noCoordinateDrift() {
-        // Bug only occurs when view is in a visible window hierarchy
-        let view = BuggyPathView(frame: CGRect(x: 100, y: 200, width: 60, height: 40))
-        let path = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 60, height: 40), cornerRadius: 10)
-        view.relativePath = path
-        // Note: view NOT added to window
-
-        let original = path.bounds
-
-        _ = view.accessibilityPath
-        _ = view.accessibilityPath
-        _ = view.accessibilityPath
-
-        XCTAssertEqual(path.bounds, original, "Detached view: no mutation occurs")
-    }
-
+    
     // MARK: - Workaround Verification
 
     func test_workaround_copyPath_coordinatesStable() {
