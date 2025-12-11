@@ -40,7 +40,7 @@
 		ACB9617F2EE9A02F004FD0CE /* Exceptions for "iOSAccessibilityPathBugTests" folder in "BugDemonstrationTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Exploration/AccessibilityPathMutationTests.swift,
+				Exploration/AccessibilityPathTests.swift,
 				Exploration/AccessibilitySystemTests.swift,
 				Exploration/BugMechanismInvestigation.swift,
 				Exploration/BugModelTests.swift,

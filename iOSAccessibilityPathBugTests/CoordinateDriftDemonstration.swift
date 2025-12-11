@@ -12,7 +12,18 @@ final class CoordinateDriftDemonstration: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        window = UIWindow(frame: CGRect(x: 0, y: 0, width: 400, height: 800))
+        // Get the window scene from the test host app for proper coordinate conversion
+        let windowScene = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first
+
+        if let windowScene = windowScene {
+            window = UIWindow(windowScene: windowScene)
+        } else {
+            window = UIWindow(frame: CGRect(x: 0, y: 0, width: 400, height: 800))
+        }
+
+        window.frame = CGRect(x: 0, y: 0, width: 400, height: 800)
         testView = UIView(frame: window.bounds)
         window.addSubview(testView)
         window.makeKeyAndVisible()
