@@ -1,11 +1,14 @@
 # UIAccessibility.convertToScreenCoordinates Coordinate Drift Bug: FB21356039
 
+**Status: Fixed in iOS 26.5 beta 2 (Build 23F5054h).** Apple confirmed and resolved this issue.
+
 ## Summary
 
 In iOS 18+, `UIAccessibility.convertToScreenCoordinates(_:in:)` exhibits coordinate drift when called repeatedly with the same CGPath. The function creates new output paths (as documented) but calculates coordinates that accumulate N× the screen offset, where N is the number of times that specific CGPath has been converted.
 
-**Observed in:** iOS 18.0 through iOS 26.1
-**Last working version:** iOS 17.5
+**Affected versions:** iOS 18.0 through iOS 26.4
+**Last working version before regression:** iOS 17.5
+**Fix available:** iOS 26.5 beta 2+
 
 ## Expected Behavior
 
@@ -81,8 +84,8 @@ Screenshots generated with [AccessibilitySnapshot](https://github.com/cashapp/Ac
 | iOS Version | Status |
 |-------------|--------|
 | iOS 17.5 | Works as documented |
-| iOS 18.0+ | Coordinate drift bug present |
-| iOS 26.1 | Still present (latest tested) |
+| iOS 18.0 – 26.4 | Coordinate drift bug present |
+| iOS 26.5 beta 2+ | **Fixed** |
 
 ## Bug Behavior
 
@@ -103,9 +106,9 @@ Example with view at screen position (100, 200):
 
 The bug affects `UIBezierPath(roundedRect:)` and CGPath with explicit elements (lines, curves). Simple paths like `rect`, `ovalIn`, and `arcCenter` work correctly.
 
-## Workaround
+## Workaround (iOS 18.0 – 26.4)
 
-Copy the path before conversion:
+Copy the path before conversion. This is no longer needed on iOS 26.5+.
 
 ```swift
 override var accessibilityPath: UIBezierPath? {

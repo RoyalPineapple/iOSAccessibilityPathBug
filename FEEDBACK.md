@@ -4,6 +4,7 @@
 **Feedback Type:** Bug Report
 **Area:** UIAccessibility API
 **Reproducible:** Always
+**Resolution:** Fixed in iOS 26.5 beta 2 (Build 23F5054h)
 
 ## Summary
 
